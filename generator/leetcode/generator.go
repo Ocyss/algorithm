@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/Ocyss/algorithm/generator/utils"
 	"github.com/levigross/grequests"
 	"github.com/skratchdot/open-golang/open"
 	"golang.org/x/net/html"
@@ -363,10 +364,10 @@ func (p *problem) parseHTML(session *grequests.Session) (err error) {
 				jsonText = jsonText[:len(jsonText)-3] + "]" // remove , at end
 				jsonText = strings.Replace(jsonText, `'`, `"`, -1)
 
-				data := []struct {
+				var data []struct {
 					Value       string `json:"value"`
 					DefaultCode string `json:"defaultCode"`
-				}{}
+				}
 				if err := json.Unmarshal([]byte(jsonText), &data); err != nil {
 					return err
 				}
@@ -556,7 +557,7 @@ func Test_%s(t *testing.T) {%s
 }
 
 func (p *problem) writeTestDataFile() error {
-	lines := []string{}
+	var lines []string
 	for i, inArgs := range p.sampleIns {
 		lines = append(lines, inArgs...)
 		if i < len(p.sampleOuts) {
@@ -593,13 +594,14 @@ func handleProblems(session *grequests.Session, problems []*problem) error {
 			defer wg.Done()
 
 			if err := p.parseHTML(session); err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				_, _ = fmt.Fprintln(os.Stderr, err)
 			}
 
-			customFuncContent := "\t\n\treturn"
+			customFuncContent := "\t\n" // 空换行
 			if p.needMod {
-				customFuncContent = "\t\n\t\n\t\n\tans = (ans%mod + mod) % mod\n\treturn"
+				customFuncContent += "\t\n\t\n\tans = (ans%mod + mod) % mod\n"
 			}
+			customFuncContent += "\treturn" // 补上 return
 
 			p.defaultCode = modifyDefaultCode(p.defaultCode, p.funcLos, []modifyLineFunc{
 				toGolangReceiverName,
@@ -642,9 +644,9 @@ func updateComment(cmt string) string {
 	return cmt
 }
 
-// 获取题目信息（含题目链接）
+// GenLeetCodeTests 获取题目信息（含题目链接）
 // contestTag 如 "weekly-contest-200"，可以从比赛链接中获取
-func GenLeetCodeTests(username, password, contestTag string, openWebPage bool, contestDir, customComment string) error {
+func GenLeetCodeTests(username, password, contestTag string, openWebPage bool, contestDir string) error {
 	session, err := login(username, password)
 	if err != nil {
 		return err
@@ -666,7 +668,7 @@ func GenLeetCodeTests(username, password, contestTag string, openWebPage bool, c
 		return nil
 	}
 
-	customComment = updateComment(customComment)
+	customComment := updateComment(utils.Config.Comment)
 
 	for _, p := range problems {
 		p.openURL = openWebPage
@@ -683,7 +685,7 @@ const (
 	SeasonFall   = "fall"
 )
 
-// 获取力扣杯题目信息
+// GenLeetCodeSeasonTests 获取力扣杯题目信息
 // slug 如 "2020-fall", "2021-spring"
 func GenLeetCodeSeasonTests(username, password, slug string, isSolo, openWebPage bool, contestDir, customComment string) error {
 	session, err := login(username, password)
@@ -724,10 +726,10 @@ func GenLeetCodeSpecialTests(username, password string, urlsZHs []string, openWe
 	customComment = updateComment(customComment)
 
 	problems := make([]*problem, len(urlsZHs))
-	for i, url := range urlsZHs {
+	for i, uri := range urlsZHs {
 		problems[i] = &problem{
 			id:            string(byte('a' + i)),
-			url:           url,
+			url:           uri,
 			openURL:       openWebPage,
 			customComment: customComment,
 			contestDir:    contestDir,
