@@ -44,12 +44,9 @@ func genLeetCodeTests(selectId int) {
 		contestID        int
 		tag              string
 		dir              string
-		err              error
 	)
 	fmt.Print("请输入参赛id (直接回城为本次比赛)：")
-	_, err = fmt.Scanln(&testID)
-	tool.Er(err)
-
+	_, _ = fmt.Scanln(&testID)
 	if selectId == 1 {
 		contestID = leetcode.GetWeeklyContestID(testID) // 自动生成下一场周赛 ID
 		tag = leetcode.GetWeeklyContestTag(contestID)
