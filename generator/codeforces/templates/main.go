@@ -8,7 +8,11 @@ import (
 	"strings"
 )
 
-// https://space.bilibili.com/206214
+func start(n int) int {
+	return 0
+}
+
+// https://github.com/Ocyss
 func run(_r io.Reader, _w io.Writer) {
 	in := bufio.NewReader(_r)
 	out := bufio.NewWriter(_w)
@@ -17,7 +21,7 @@ func run(_r io.Reader, _w io.Writer) {
 	solve := func(curCase int) {
 		var n int
 		Fscan(in, &n)
-
+		Fprint(out, start(n))
 	}
 
 	cases := 1

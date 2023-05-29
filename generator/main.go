@@ -8,11 +8,14 @@ import (
 	"github.com/Ocyss/algorithm/generator/utils/tool"
 	"net/url"
 	"os"
+
 	"strings"
 )
 
+var conf utils.Conf
+
 func main() {
-	utils.InitSettings()
+	conf = utils.InitSettings()
 	var selectId int
 top:
 	fmt.Print(`感谢 灵茶山艾府🎈 的模板生成器 🥰 >
@@ -76,7 +79,17 @@ func genCodeForcesTests() {
 		err = codeforces.GenCodeforcesProblemTemplates(d, err != nil)
 		tool.Er(err)
 	} else if sid == 2 {
-		fmt.Println("竞赛模板")
+		var d string
+		fmt.Print("请输入 ID：")
+		_, _ = fmt.Scan(&d)
+		rootPath := conf.Codeforces.Path + "contests/" + d + "/"
+		tool.Er(os.Mkdir(rootPath, os.ModePerm))
+		var b int
+		fmt.Print("请输入 数量：")
+		_, _ = fmt.Scan(&b)
+		err := codeforces.GenTemplates(b, rootPath, true)
+		tool.Er(err)
+
 	} else {
 		panic("模式选择错误")
 	}

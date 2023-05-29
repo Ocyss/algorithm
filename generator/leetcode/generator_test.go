@@ -37,5 +37,5 @@ func genLeetCodeTests(weekly bool) error {
 		tag = GetBiweeklyContestTag(contestID)
 		dir = fmt.Sprintf("../../双周赛/%d/", contestID) // 自定义生成目录
 	}
-	return GenLeetCodeTests(username, password, tag, true, dir, comment)
+	return GenLeetCodeTests(username, password, tag, true, dir)
 }

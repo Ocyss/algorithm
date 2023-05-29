@@ -24,7 +24,8 @@ func GenCodeforcesContestTemplates(cmdName, rootPath, contestID string, overwrit
 		return nil
 	}
 
-	openedOneFile := false
+	//openedOneFile := false
+	openedOneFile := true
 
 	return filepath.Walk(rootPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -35,7 +36,7 @@ func GenCodeforcesContestTemplates(cmdName, rootPath, contestID string, overwrit
 		}
 
 		parentName := filepath.Base(path)
-		for _, srcFileName := range []string{"templates\\main.go", "templates\\main_test.go"} {
+		for _, srcFileName := range []string{"main.go", "main_test.go"} {
 			// 为了便于区分，把 main 替换成所在目录的名字
 			dstFileName := strings.Replace(srcFileName, "main", parentName, 1)
 			dstFilePath := filepath.Join(path, dstFileName)
@@ -53,6 +54,7 @@ func GenCodeforcesContestTemplates(cmdName, rootPath, contestID string, overwrit
 			}
 		}
 		cmd := fmt.Sprintf("%s submit contest %s %s -f %s.go", cmdName, contestID, parentName, parentName)
+		fmt.Println(cmd)
 		if err := os.WriteFile(filepath.Join(path, parentName+".bat"), []byte(cmd), 0644); err != nil {
 			return err
 		}
@@ -162,19 +164,20 @@ func GenTemplates(problemNum int, rootPath string, overwrite bool) error {
 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
 			return err
 		}
-		for _, fileName := range []string{"templates\\main.go", "templates\\main_test.go"} {
+		for j, fileName := range []string{"main.go", "main_test.go"} {
 			goFilePath := dir + strings.Replace(fileName, "main", string(i), 1)
 			if !overwrite {
 				if _, err := os.Stat(goFilePath); !os.IsNotExist(err) {
 					continue
 				}
 			}
-			if err := copyFile(goFilePath, fileName); err != nil {
+			if err := copyFile(goFilePath, "codeforces/templates/"+fileName); err != nil {
 				return err
 			}
-			//if i == 'a' && j == 0 {
-			//	_ = open.Run(absPath(goFilePath))
-			//}
+			if i == 'a' && j == 0 {
+				//_ = open.Run(absPath(goFilePath))
+				tool.OpenGoLand(utils.Config.Codeforces.Path, goFilePath)
+			}
 		}
 	}
 	return nil
