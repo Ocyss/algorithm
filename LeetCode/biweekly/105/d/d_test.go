@@ -2,7 +2,7 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
+	"leetcode/testutil"
 	"testing"
 )
 
@@ -12,5 +12,6 @@ func Test_d(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
 // https://leetcode.cn/contest/biweekly-contest-105/problems/greatest-common-divisor-traversal/
 // https://leetcode.cn/problems/greatest-common-divisor-traversal/

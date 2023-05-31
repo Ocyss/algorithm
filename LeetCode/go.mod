@@ -1,11 +1,11 @@
-module codeforces
+module leetcode
 
 go 1.20
 
 require (
 	github.com/EndlessCheng/codeforces-go v1.2.0
 	github.com/shirou/gopsutil/v3 v3.23.4
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.3
 )
 
 require (

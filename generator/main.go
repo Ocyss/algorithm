@@ -53,11 +53,11 @@ func genLeetCodeTests(selectId int) {
 	if selectId == 1 {
 		contestID = leetcode.GetWeeklyContestID(testID) // 自动生成下一场周赛 ID
 		tag = leetcode.GetWeeklyContestTag(contestID)
-		dir = fmt.Sprintf(utils.Config.Leetcode.Path+"周赛/%d/", contestID) // 自定义生成目录
+		dir = fmt.Sprintf(utils.Config.Leetcode.Path+"weekly/%d/", contestID) // 自定义生成目录
 	} else {
 		contestID = leetcode.GetBiweeklyContestID(testID) // 自动生成下一场双周赛 ID
 		tag = leetcode.GetBiweeklyContestTag(contestID)
-		dir = fmt.Sprintf(utils.Config.Leetcode.Path+"双周赛/%d/", contestID) // 自定义生成目录
+		dir = fmt.Sprintf(utils.Config.Leetcode.Path+"biweekly/%d/", contestID) // 自定义生成目录
 	}
 
 	tool.Er(leetcode.GenLeetCodeTests(leetcodeUsername, leetcodePassword, tag, true, dir))
