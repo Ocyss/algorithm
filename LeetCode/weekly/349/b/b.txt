@@ -1,0 +1,15 @@
+"cbabc"
+"baabc"
+
+"acbbc"
+"abaab"
+
+"leetcode"
+"kddsbncd"
+
+"a"
+"z"
+
+"aa"
+"az"
+

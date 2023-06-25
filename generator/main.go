@@ -18,7 +18,7 @@ func main() {
 	conf = utils.InitSettings()
 	var selectId int
 top:
-	fmt.Print(`感谢 灵茶山艾府🎈 的模板生成器 🥰 >
+	fmt.Print(`啊，灵神🤤赐予我力量吧🤤🤤 >
 1.LeetCode 周赛
 2.LeetCode 双周赛
 3.CodeForces
@@ -48,8 +48,8 @@ func genLeetCodeTests(selectId int) {
 		tag              string
 		dir              string
 	)
-	fmt.Print("请输入参赛id (直接回城为本次比赛)：")
-	_, _ = fmt.Scanln(&testID)
+	//fmt.Print("请输入参赛id：")
+	//_, _ = fmt.Scanln(&testID)
 	if selectId == 1 {
 		contestID = leetcode.GetWeeklyContestID(testID) // 自动生成下一场周赛 ID
 		tag = leetcode.GetWeeklyContestTag(contestID)
