@@ -126,10 +126,10 @@ func fetchProblemURLs(session *grequests.Session, contestTag string) (problems [
 	//fmt.Println("当前报名人数", d.UserNum)
 
 	if sleepTime := time.Until(time.Unix(d.Contest.StartTime, 0)); sleepTime > 0 {
-		if !d.Registered {
-			fmt.Printf("该账号尚未报名%s\n", d.Contest.Title)
-			return
-		}
+		//if !d.Registered {
+		//	fmt.Printf("该账号尚未报名%s\n", d.Contest.Title)
+		//	return
+		//}
 
 		sleepTime += 500 * time.Millisecond // 消除误差
 		fmt.Printf("%s尚未开始，等待中……\n%v\n", d.Contest.Title, sleepTime)
