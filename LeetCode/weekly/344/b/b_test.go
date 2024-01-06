@@ -2,8 +2,9 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 	"testing"
+
+	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 )
 
 func Test_b(t *testing.T) {
@@ -13,5 +14,6 @@ func Test_b(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
 // https://leetcode.cn/contest/weekly-contest-344/problems/frequency-tracker/
 // https://leetcode.cn/problems/frequency-tracker/

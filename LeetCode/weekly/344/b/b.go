@@ -7,7 +7,6 @@ type FrequencyTracker struct {
 }
 
 func Constructor() FrequencyTracker {
-
 	return FrequencyTracker{map[int]int{}, map[int]int{}}
 }
 

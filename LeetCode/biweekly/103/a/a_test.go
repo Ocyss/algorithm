@@ -2,8 +2,9 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 	"testing"
+
+	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 )
 
 func Test_a(t *testing.T) {
@@ -12,5 +13,6 @@ func Test_a(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
 // https://leetcode.cn/contest/biweekly-contest-103/problems/maximum-sum-with-exactly-k-elements/
 // https://leetcode.cn/problems/maximum-sum-with-exactly-k-elements/

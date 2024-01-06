@@ -2,8 +2,9 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 	"testing"
+
+	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 )
 
 func Test_a(t *testing.T) {
@@ -12,5 +13,6 @@ func Test_a(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
 // https://leetcode.cn/contest/weekly-contest-353/problems/find-the-maximum-achievable-number/
 // https://leetcode.cn/problems/find-the-maximum-achievable-number/

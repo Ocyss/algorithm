@@ -4,21 +4,24 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/Ocyss/algorithm/generator/utils"
-	"github.com/levigross/grequests"
-	"github.com/skratchdot/open-golang/open"
-	"golang.org/x/net/html"
-	"golang.org/x/net/html/atom"
 	"io"
 	"net/url"
 	"os"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/Ocyss/OI/generator/utils"
+	"github.com/levigross/grequests"
+	"github.com/skratchdot/open-golang/open"
+	"golang.org/x/net/html"
+	"golang.org/x/net/html/atom"
 )
 
-const host = "leetcode.cn"
-const graphqlURL = "https://" + host + "/graphql"
+const (
+	host       = "leetcode.cn"
+	graphqlURL = "https://" + host + "/graphql"
+)
 
 // 使用用户名和密码登录
 func login(username, password string) (session *grequests.Session, err error) {
@@ -27,7 +30,7 @@ func login(username, password string) (session *grequests.Session, err error) {
 		UserAgent:    ua,
 		UseCookieJar: true,
 	})
-
+	//
 	// "touch" csrfToken
 	resp, err := session.Post(graphqlURL, &grequests.RequestOptions{
 		JSON: map[string]interface{}{
@@ -123,7 +126,7 @@ func fetchProblemURLs(session *grequests.Session, contestTag string) (problems [
 		return nil, fmt.Errorf("未找到比赛或比赛尚未开始: %s", contestTag)
 	}
 
-	//fmt.Println("当前报名人数", d.UserNum)
+	// fmt.Println("当前报名人数", d.UserNum)
 
 	if sleepTime := time.Until(time.Unix(d.Contest.StartTime, 0)); sleepTime > 0 {
 		//if !d.Registered {
@@ -388,72 +391,71 @@ func (p *problem) parseHTML(session *grequests.Session) (err error) {
 		fmt.Println("解析失败，未找到 Go 代码模板！")
 	}
 
+	// 下面这段是旧的解析方案测试过程中发现的 bug
+	// 新版解析方案改用英文 + strong tag 解析，没有这些 bug
+	//     提取并解析每个 <pre> 块内的文本
+	// 需要判断 <pre> 的下一个子元素是否为 tag
+	//     https://leetcode-cn.com/contest/weekly-contest-190/problems/max-dot-product-of-two-subsequences/
+	//     https://leetcode-cn.com/contest/weekly-contest-212/problems/arithmetic-subarrays/
+	// 有 tag 也不一定为 <strong>
+	//     <img> https://leetcode-cn.com/contest/weekly-contest-103/problems/snakes-and-ladders/
+	//     <b> https://leetcode-cn.com/contest/weekly-contest-210/problems/split-two-strings-to-make-palindrome/
+	//     <code> https://leetcode-cn.com/contest/weekly-contest-163/problems/shift-2d-grid/
+	//         https://leetcode.cn/contest/weekly-contest-345/problems/maximum-number-of-moves-in-a-grid/
+	//         https://leetcode.cn/contest/biweekly-contest-36/problems/find-valid-matrix-given-row-and-column-sums/
+	//     找到第一个文本，这样写是因为可能有额外的嵌套 tag https://leetcode-cn.com/contest/weekly-contest-163/problems/shift-2d-grid/
+
 	var parseNode func(*html.Node)
 	parseNode = func(o *html.Node) {
-		// 提取并解析每个 <pre> 块内的文本（以中文为基准解析）
-		// 需要判断 <pre> 的下一个子元素是否为 tag
-		//     https://leetcode-cn.com/contest/weekly-contest-190/problems/max-dot-product-of-two-subsequences/
-		//     https://leetcode-cn.com/contest/weekly-contest-212/problems/arithmetic-subarrays/
-		// 有 tag 也不一定为 <strong>
-		//     <img> https://leetcode-cn.com/contest/weekly-contest-103/problems/snakes-and-ladders/
-		//     <b> https://leetcode-cn.com/contest/weekly-contest-210/problems/split-two-strings-to-make-palindrome/
-		//     <code> https://leetcode-cn.com/contest/weekly-contest-163/problems/shift-2d-grid/
-		// 提取出文本后，去掉「解释」和「提示」后面的文字，然后分「输入」和「输出」来解析后面的数据
-		if o.DataAtom == atom.Pre && o.FirstChild.DataAtom != 0 && o.FirstChild.DataAtom != atom.Img && o.FirstChild.DataAtom != atom.Image { // 一般是 atom.Strong，特殊情况是 atom.B
-			// 找到第一个文本，这样写是因为可能有额外的嵌套 tag https://leetcode-cn.com/contest/weekly-contest-163/problems/shift-2d-grid/
-			var data string
-			for o := o.FirstChild.FirstChild; o != nil; o = o.FirstChild {
-				if o.DataAtom == 0 {
-					data = o.Data
+		// 寻找 <strong>Input:</strong> 和 <strong>Output:</strong>
+		// 不要用中文的，国服偶尔会破坏这个规则
+		const inputToken = "Input"
+		const outputToken = "Output"
+		const explanationToken = "Explanation"
+		const explanationToken2 = "Explaination"
+		// 设计题末尾没有 ':'
+		tidy := func(data string) string {
+			data = strings.TrimSpace(data)
+			if data != "" && data[len(data)-1] == ':' {
+				data = data[:len(data)-1]
+			}
+			return data
+		}
+		isInput := func(data string) bool { return tidy(data) == inputToken }
+		isOutput := func(data string) bool { return tidy(data) == outputToken }
+		isExplanation := func(data string) bool { return tidy(data) == explanationToken || tidy(data) == explanationToken2 }
+		if o.DataAtom == atom.Strong && o.FirstChild != nil && (isInput(o.FirstChild.Data) || isOutput(o.FirstChild.Data)) {
+			curNode := o.FirstChild
+			// 提取输入输出信息
+			rawData := &strings.Builder{}
+			var parseTextAfterStrong func(*html.Node) bool
+			parseTextAfterStrong = func(o *html.Node) bool {
+				if o != curNode && o.Type == html.TextNode {
+					// 不再继续寻找
+					if isOutput(o.Data) || isExplanation(o.Data) {
+						return true
+					}
+					rawData.WriteString(o.Data)
+				}
+				for c := o.FirstChild; c != nil; c = c.NextSibling {
+					if parseTextAfterStrong(c) {
+						return true
+					}
+				}
+				return false
+			}
+			for c := o; c != nil; c = c.NextSibling {
+				if parseTextAfterStrong(c) {
 					break
 				}
 			}
-			if strings.HasPrefix(strings.TrimSpace(data), "输") { // 输入（极少情况下会被错误地写成输出）
-				rawData := &strings.Builder{}
-				var parsePreNode func(*html.Node)
-				parsePreNode = func(o *html.Node) {
-					if o.DataAtom == 0 {
-						rawData.WriteString(o.Data)
-					}
-					for c := o.FirstChild; c != nil; c = c.NextSibling {
-						parsePreNode(c)
-					}
-				}
-				parsePreNode(o)
 
-				// 只关心「解释」之前的内容
-				data := rawData.String()
-				if i := strings.Index(data, "解"); i >= 0 { // 解释
-					data = data[:i]
-				}
-				if i := strings.Index(data, "提"); i >= 0 { // 提示
-					data = data[:i]
-				}
-				data = strings.TrimSpace(data)
-
-				// 去掉前两个汉字
-				data = data[6:]
-				// 去掉冒号
-				if i := strings.IndexRune(data, '：'); i >= 0 {
-					data = data[i+3:]
-				} else if i := strings.IndexRune(data, ':'); i >= 0 {
-					data = data[i+1:]
-				}
-
-				i := strings.Index(data, "输") // 输出
-				p.sampleIns = append(p.sampleIns, p.parseSampleText(data[:i], true))
-				data = data[i:]
-
-				// 去掉前两个汉字
-				data = data[6:]
-				// 去掉冒号
-				if i := strings.IndexRune(data, '：'); i >= 0 {
-					data = data[i+3:]
-				} else if i := strings.IndexRune(data, ':'); i >= 0 {
-					data = data[i+1:]
-				}
-				p.sampleOuts = append(p.sampleOuts, p.parseSampleText(data, true))
-				return
+			if isInput(o.FirstChild.Data) {
+				p.sampleIns = append(p.sampleIns, p.parseSampleText(rawData.String(), true))
+			} else if isOutput(o.FirstChild.Data) {
+				p.sampleOuts = append(p.sampleOuts, p.parseSampleText(rawData.String(), true))
+			} else {
+				panic("这不可能。代码有误！")
 			}
 		}
 		for c := o.FirstChild; c != nil; c = c.NextSibling {
@@ -505,7 +507,7 @@ func (p *problem) writeMainFile() error {
 	imports := ""
 	if strings.Contains(p.defaultCode, "Definition for") {
 		imports = `
-import . "github.com/EndlessCheng/codeforces-go/leetcode/testutil"
+import . "leetcode/testutil"
 `
 	}
 	p.defaultCode = strings.TrimSpace(p.defaultCode)
@@ -518,7 +520,7 @@ import . "github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 	//if p.id == "a" {
 	//	defer open.Run(absPath(filePath)) // 打开第一道题的文件
 	//}
-	return os.WriteFile(filePath, []byte(fileContent), 0644)
+	return os.WriteFile(filePath, []byte(fileContent), 0o644)
 }
 
 func (p *problem) writeTestFile() error {
@@ -538,7 +540,7 @@ func (p *problem) writeTestFile() error {
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
+	"leetcode/testutil"
 	"testing"
 )
 
@@ -553,7 +555,7 @@ func Test_%s(t *testing.T) {%s
 `, p.id, logInfo, testUtilFunc, p.funcName, p.id, p.url, problemURL)
 
 	filePath := p.contestDir + fmt.Sprintf("%[1]s/%[1]s_test.go", p.id)
-	return os.WriteFile(filePath, []byte(testStr), 0644)
+	return os.WriteFile(filePath, []byte(testStr), 0o644)
 }
 
 func (p *problem) writeTestDataFile() error {
@@ -569,7 +571,7 @@ func (p *problem) writeTestDataFile() error {
 	testDataStr := strings.Join(lines, "\n")
 
 	filePath := p.contestDir + fmt.Sprintf("%[1]s/%[1]s.txt", p.id)
-	return os.WriteFile(filePath, []byte(testDataStr), 0644)
+	return os.WriteFile(filePath, []byte(testDataStr), 0o644)
 }
 
 func handleProblems(session *grequests.Session, problems []*problem) error {
@@ -594,7 +596,7 @@ func handleProblems(session *grequests.Session, problems []*problem) error {
 			defer wg.Done()
 
 			if err := p.parseHTML(session); err != nil {
-				_, _ = fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintln(os.Stderr, err)
 			}
 
 			customFuncContent := "\t\n" // 空换行
@@ -652,7 +654,7 @@ func GenLeetCodeTests(username, password, contestTag string, openWebPage bool, c
 		return err
 	}
 	fmt.Println("登录成功")
-	//fmt.Println("登录成功", host, username)
+	// fmt.Println("登录成功", host, username)
 
 	var problems []*problem
 	for {

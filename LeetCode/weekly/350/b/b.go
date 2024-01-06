@@ -12,6 +12,7 @@ func findValueOfPartition(a []int) (ans int) {
 	mid := len(a) / 2
 	return abs(a[mid+1] - a[mid])
 }
+
 func abs(a int) int {
 	if a < 0 {
 		return -a

@@ -2,8 +2,9 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 	"testing"
+
+	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 )
 
 func Test_d(t *testing.T) {
@@ -12,5 +13,6 @@ func Test_d(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
 // https://leetcode.cn/contest/weekly-contest-341/problems/minimize-the-total-price-of-the-trips/
 // https://leetcode.cn/problems/minimize-the-total-price-of-the-trips/

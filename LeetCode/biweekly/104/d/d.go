@@ -44,6 +44,7 @@ func max(a, b int) int {
 	}
 	return b
 }
+
 func min(a, b int) int {
 	if a < b {
 		return a
@@ -56,6 +57,7 @@ type heap []int
 func (hp heap) Swap(a, b int) {
 	hp[a], hp[b] = hp[b], hp[a]
 }
+
 func (hp heap) Less(i, j int) bool {
 	return hp[i] > hp[j]
 }

@@ -23,6 +23,7 @@ func init() {
 		}
 	}
 }
+
 func CF237C(_r io.Reader, _w io.Writer) {
 	in := bufio.NewReader(_r)
 	out := bufio.NewWriter(_w)
@@ -57,7 +58,6 @@ func CF237C(_r io.Reader, _w io.Writer) {
 	} else {
 		fmt.Fprint(out, r)
 	}
-
 }
 
 func main() { CF237C(os.Stdin, os.Stdout) }

@@ -2,8 +2,9 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 	"testing"
+
+	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 )
 
 func Test_c(t *testing.T) {
@@ -12,5 +13,6 @@ func Test_c(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
 // https://leetcode.cn/contest/weekly-contest-354/problems/minimum-index-of-a-valid-split/
 // https://leetcode.cn/problems/minimum-index-of-a-valid-split/

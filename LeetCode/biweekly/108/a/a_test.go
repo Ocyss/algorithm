@@ -2,7 +2,7 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
+	"github.com/Ocyss/OI/generator/leetcode/testutil"
 	"testing"
 )
 
@@ -12,5 +12,6 @@ func Test_a(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
 // https://leetcode.cn/contest/biweekly-contest-108/problems/longest-alternating-subarray/
 // https://leetcode.cn/problems/longest-alternating-subarray/

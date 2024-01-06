@@ -1,6 +1,8 @@
-goLandPath: "D:\\IDE\\GoLand\\bin\\goland64.exe"
+goLandPath: "golangd"
 comment: "https://github.com/Ocyss"
 leetcode:
-  Path: "../LeetCode/"
+  Path: "LeetCode"
 codeforces:
-  Path: "../CodeForces/" #codeforces生成目录
+  Path: "CodeForces"
+luogu:
+  Path: "Luogu"

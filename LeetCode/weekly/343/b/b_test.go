@@ -2,8 +2,9 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 	"testing"
+
+	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 )
 
 func Test_b(t *testing.T) {
@@ -12,5 +13,6 @@ func Test_b(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
 // https://leetcode.cn/contest/weekly-contest-343/problems/first-completely-painted-row-or-column/
 // https://leetcode.cn/problems/first-completely-painted-row-or-column/

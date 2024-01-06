@@ -33,6 +33,7 @@ func specialPerm(a []int) (ans int) {
 	ans = (ans%mod + mod) % mod
 	return
 }
+
 func check(a, b int) bool {
 	return a%b == 0 || b%a == 0
 }

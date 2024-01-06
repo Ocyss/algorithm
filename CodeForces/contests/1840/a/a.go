@@ -9,7 +9,7 @@ import (
 )
 
 func start(n int, s string) string {
-	//Println(n, s)
+	// Println(n, s)
 	var res []byte
 	for i := 0; i < n; i++ {
 		res = append(res, s[i])
@@ -35,7 +35,7 @@ func run(_r io.Reader, _w io.Writer) {
 		var s string
 		Fscan(in, &n, &s)
 		l := start(n, s)
-		//Println(l)
+		// Println(l)
 		Fprintln(out, l)
 	}
 
@@ -51,7 +51,6 @@ func run(_r io.Reader, _w io.Writer) {
 	if s := strings.TrimSpace(string(leftData)); s != "" {
 		panic("有未读入的数据：\n" + s)
 	}
-
 }
 
 func main() { run(os.Stdin, os.Stdout) }

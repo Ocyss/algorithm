@@ -2,14 +2,15 @@ package codeforces
 
 import (
 	"fmt"
-	"github.com/Ocyss/algorithm/generator/utils"
-	"github.com/Ocyss/algorithm/generator/utils/tool"
-	"github.com/skratchdot/open-golang/open"
 	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/Ocyss/OI/generator/utils"
+	"github.com/Ocyss/OI/generator/utils/tool"
+	"github.com/skratchdot/open-golang/open"
 )
 
 const (
@@ -24,7 +25,7 @@ func GenCodeforcesContestTemplates(cmdName, rootPath, contestID string, overwrit
 		return nil
 	}
 
-	//openedOneFile := false
+	// openedOneFile := false
 	openedOneFile := true
 
 	return filepath.Walk(rootPath, func(path string, info os.FileInfo, err error) error {
@@ -50,11 +51,10 @@ func GenCodeforcesContestTemplates(cmdName, rootPath, contestID string, overwrit
 			}
 			if !openedOneFile {
 				openedOneFile = true
-				_ = open.Run(absPath(dstFilePath))
+				open.Run(absPath(dstFilePath))
 			}
 		}
 		cmd := fmt.Sprintf("%s submit contest %s %s -f %s.go", cmdName, contestID, parentName, parentName)
-		fmt.Println(cmd)
 		if err := os.WriteFile(filepath.Join(path, parentName+".bat"), []byte(cmd), 0644); err != nil {
 			return err
 		}
@@ -74,6 +74,8 @@ func GenCodeforcesProblemTemplates(problemURL string, openWebsite bool) error {
 		return fmt.Errorf("invalid URL: %v", err)
 	}
 
+	luoguURL := fmt.Sprintf("https://www.luogu.com.cn/problem/CF%s%s", contestID, problemID)
+
 	var statusURL string
 	if isGYM {
 		statusURL = fmt.Sprintf("https://%s/gym/%s/status/%s", urlObj.Host, contestID, problemID)
@@ -82,10 +84,24 @@ func GenCodeforcesProblemTemplates(problemURL string, openWebsite bool) error {
 	}
 
 	if openWebsite {
-		luoguURL := fmt.Sprintf("https://www.luogu.com.cn/problem/CF%s%s", contestID, problemID)
-		_ = open.Run(luoguURL)
+		//_ = open.Run(luoguURL)
 		_ = open.Run(statusURL)
-		_ = open.Run(problemURL)
+		//_ = open.Run(problemURL)
+	}
+
+	example, err := parseExamples(luoguURL)
+	if err != nil {
+		return err
+	}
+
+	exampleStr := ""
+	for _, p := range example {
+		in := strings.TrimSpace(p[0])
+		out := strings.TrimSpace(p[1])
+		exampleStr += "\n\t\t{\n"
+		exampleStr += "\t\t\t`" + in + "`,\n"
+		exampleStr += "\t\t\t`" + out + "`,\n"
+		exampleStr += "\t\t},"
 	}
 
 	if !isGYM {
@@ -106,7 +122,7 @@ func CF%[1]s(_r io.Reader, _w io.Writer) {
 	defer out.Flush()
 
 	var n int
-	_, _ = fmt.Fscan(in, &n)
+	fmt.Fscan(in, &n)
 }
 
 func main() { CF%[1]s(os.Stdin, os.Stdout) }
@@ -118,15 +134,14 @@ import (
 	"testing"
 )
 
-// TestCF%[1]s %[2]s
-// %[3]s
-// %[4]s
-func TestCF%[1]s(t *testing.T) {
-	// just copy from website
-	rawText := `+"`\n`"+`
-	testutil.AssertEqualCase(t, rawText, 0, CF%[1]s)
+// %s
+// %s
+func TestCF%[3]s(t *testing.T) {
+	testCases := [][2]string{%s
 }
-`, problemID, problemURL, statusURL, utils.Config.Comment)
+	testutil.AssertEqualStringCase(t, testCases, 0, CF%[3]s)
+}
+`, problemURL, statusURL, problemID, exampleStr)
 
 	var dir string
 	if isGYM {
@@ -140,16 +155,16 @@ func TestCF%[1]s(t *testing.T) {
 
 	mainFilePath := dir + problemID + ".go"
 	if _, err := os.Stat(mainFilePath); !os.IsNotExist(err) {
-		_ = open.Run(absPath(mainFilePath))
+		open.Run(absPath(mainFilePath))
 		return fmt.Errorf("文件已存在！")
 	}
-	if err := os.WriteFile(mainFilePath, []byte(mainStr), 0644); err != nil {
+	if err := os.WriteFile(mainFilePath, []byte(mainStr), 0o644); err != nil {
 		return err
 	}
 	//_ = open.Run(absPath(mainFilePath))
 
 	testFilePath := dir + problemID + "_test.go"
-	if err := os.WriteFile(testFilePath, []byte(mainTestStr), 0644); err != nil {
+	if err := os.WriteFile(testFilePath, []byte(mainTestStr), 0o644); err != nil {
 		return err
 	}
 	tool.OpenGoLand(utils.Config.Codeforces.Path, mainFilePath, testFilePath) // 打开GoLand

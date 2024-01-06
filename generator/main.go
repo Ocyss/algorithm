@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/Ocyss/algorithm/generator/codeforces"
-	"github.com/Ocyss/algorithm/generator/leetcode"
-	"github.com/Ocyss/algorithm/generator/utils"
-	"github.com/Ocyss/algorithm/generator/utils/tool"
 	"net/url"
 	"os"
-
 	"strings"
+
+	"github.com/Ocyss/OI/generator/codeforces"
+	"github.com/Ocyss/OI/generator/leetcode"
+	"github.com/Ocyss/OI/generator/utils"
+	"github.com/Ocyss/OI/generator/utils/tool"
 )
 
 var conf utils.Conf
@@ -93,5 +93,4 @@ func genCodeForcesTests() {
 	} else {
 		panic("模式选择错误")
 	}
-
 }

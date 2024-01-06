@@ -16,7 +16,7 @@ func relocateMarbles(a []int, moveFrom []int, moveTo []int) (ans []int) {
 		set[moveTo[i]] = struct{}{}
 		delete(set, v)
 	}
-	for k, _ := range set {
+	for k := range set {
 		ans = append(ans, k)
 	}
 	sort.Ints(ans)

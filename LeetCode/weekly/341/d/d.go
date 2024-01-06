@@ -32,12 +32,14 @@ func minimumTotalPrice(n int, es [][]int, price []int, trips [][]int) (ans int) 
 	}
 	return
 }
+
 func min(a, b int) int {
 	if a < b {
 		return a
 	}
 	return b
 }
+
 func dz(g [][]int, n int, price []int) []int {
 	var dfs func(int, bool) int
 	b := make([]bool, n)

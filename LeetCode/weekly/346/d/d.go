@@ -29,7 +29,6 @@ func modifiedGraphEdges(n int, es [][]int, st int, dt int, tar int) (ans [][]int
 				continue
 			}
 		}
-
 	}
 	return
 }

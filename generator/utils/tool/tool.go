@@ -1,10 +1,11 @@
 package tool
 
 import (
-	"github.com/Ocyss/algorithm/generator/utils"
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/Ocyss/OI/generator/utils"
 )
 
 func OpenGoLand(dir string, files ...string) {

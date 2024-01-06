@@ -32,5 +32,4 @@ func dfs(i int, vis []bool, ljt map[int][]int) int {
 	for _, v := range ljt[i] {
 		dfs(v, vis, ljt)
 	}
-
 }

@@ -19,12 +19,14 @@ func maximumJumps(a []int, tar int) (ans int) {
 	}
 	return
 }
+
 func max(a, b int) int {
 	if a > b {
 		return a
 	}
 	return b
 }
+
 func abs(a int) int {
 	if a < 0 {
 		return -a

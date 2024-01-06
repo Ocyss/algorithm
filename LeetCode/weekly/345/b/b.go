@@ -34,7 +34,6 @@ func doesValidArrayExist(derived []int) bool {
 			a[i] = a[i+1]
 			b[i] = b[i+1]
 		}
-
 	}
 	as, bs := 0, 0
 	for i, v := range derived {
@@ -45,7 +44,7 @@ func doesValidArrayExist(derived []int) bool {
 			bs++
 		}
 	}
-	//fmt.Println(a, as, b, bs)
+	// fmt.Println(a, as, b, bs)
 	if as == n || bs == n {
 		return false
 	}

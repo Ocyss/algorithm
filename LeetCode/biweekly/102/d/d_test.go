@@ -2,8 +2,9 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 	"testing"
+
+	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 )
 
 func Test_d(t *testing.T) {
@@ -13,5 +14,6 @@ func Test_d(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
 // https://leetcode.cn/contest/biweekly-contest-102/problems/design-graph-with-shortest-path-calculator/
 // https://leetcode.cn/problems/design-graph-with-shortest-path-calculator/

@@ -2,13 +2,14 @@ package main
 
 import (
 	. "fmt"
-	"github.com/EndlessCheng/codeforces-go/main/testutil"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/EndlessCheng/codeforces-go/main/testutil"
+	"github.com/stretchr/testify/assert"
 )
 
 var customTestCases = [][2]string{
@@ -51,7 +52,7 @@ func TestCompare(_t *testing.T) {
 	testutil.DebugTLE = 0
 
 	inputGenerator := func() string {
-		//return ``
+		// return ``
 		rg := testutil.NewRandGenerator()
 		rg.One() // 若不是多测则 remove
 		n := rg.Int(1, 3)
@@ -63,7 +64,6 @@ func TestCompare(_t *testing.T) {
 	// 暴力算法
 	runBF := func(in io.Reader, out io.Writer) {
 		solve := func(Case int) {
-
 		}
 
 		T := 1
@@ -81,13 +81,13 @@ func TestCompare(_t *testing.T) {
 	// 先用 runBF 跑下样例，检查 runBF 是否正确
 	dir, _ := filepath.Abs(".")
 	testutil.AssertEqualFileCaseWithName(_t, dir, "in*.txt", "ans*.txt", 0, runBF)
-	//testutil.AssertEqualStringCase(t, customTestCases, 0, runBF)
+	// testutil.AssertEqualStringCase(t, customTestCases, 0, runBF)
 	return
 
 	testutil.AssertEqualRunResultsInf(_t, inputGenerator, runBF, run)
 
 	// for hacking, write the hacked codes in runBF
-	//testutil.AssertEqualRunResultsInf(_t, inputGenerator, run, runBF)
+	// testutil.AssertEqualRunResultsInf(_t, inputGenerator, run, runBF)
 }
 
 // 无尽检查输出是否正确 / 构造 hack 数据
@@ -129,7 +129,6 @@ func TestCheck(_t *testing.T) {
 
 	// for hacking, write wrong codes here
 	runHack := func(in io.Reader, out io.Writer) {
-
 	}
 	testutil.CheckRunResultsInf(_t, inputGenerator, runHack)
 }

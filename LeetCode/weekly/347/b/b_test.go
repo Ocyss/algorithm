@@ -2,8 +2,9 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 	"testing"
+
+	"github.com/EndlessCheng/codeforces-go/leetcode/testutil"
 )
 
 func Test_b(t *testing.T) {
@@ -12,5 +13,6 @@ func Test_b(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
 // https://leetcode.cn/contest/weekly-contest-347/problems/difference-of-number-of-distinct-values-on-diagonals/
 // https://leetcode.cn/problems/difference-of-number-of-distinct-values-on-diagonals/

@@ -11,6 +11,7 @@ func findMaxFish(g [][]int) (ans int) {
 	}
 	return
 }
+
 func dfs(g [][]int, i, j int) int {
 	if i < 0 || j < 0 || i >= len(g) || j >= len(g[0]) || g[i][j] == 0 {
 		return 0

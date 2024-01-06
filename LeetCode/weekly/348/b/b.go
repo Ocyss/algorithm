@@ -11,7 +11,7 @@ func semiOrderedPermutation(a []int) (ans int) {
 			x = i
 		}
 	}
-	//fmt.Println(x, y)
+	// fmt.Println(x, y)
 	if y < x {
 		return n - y + x - 2
 	}

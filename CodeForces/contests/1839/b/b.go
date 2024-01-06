@@ -9,11 +9,10 @@ import (
 	"strings"
 )
 
-//1 13
-//1 10
-//1 6
-//2 2
-
+// 1 13
+// 1 10
+// 1 6
+// 2 2
 func start(n int, nums []pair) int {
 	sort.Slice(nums, func(i, j int) bool {
 		if nums[i].a == nums[j].a {
@@ -23,7 +22,7 @@ func start(n int, nums []pair) int {
 	})
 	x := 0
 	ans := 0
-	set := map[int]int{} //分数的灯有几个
+	set := map[int]int{} // 分数的灯有几个
 	for i := 0; i < n; i++ {
 
 		v := nums[i]
@@ -54,7 +53,6 @@ func run(_r io.Reader, _w io.Writer) {
 	defer out.Flush()
 
 	solve := func(curCase int) {
-
 		var n int
 		Fscan(in, &n)
 		nums := make([]pair, n)
@@ -77,7 +75,6 @@ func run(_r io.Reader, _w io.Writer) {
 	if s := strings.TrimSpace(string(leftData)); s != "" {
 		panic("有未读入的数据：\n" + s)
 	}
-
 }
 
 func main() { run(os.Stdin, os.Stdout) }

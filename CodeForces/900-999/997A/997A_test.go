@@ -1,8 +1,9 @@
 package main
 
 import (
-	"codeforces/testutil"
 	"testing"
+
+	"codeforces/testutil"
 )
 
 // TestCF997A https://codeforces.com/problemset/problem/997/A

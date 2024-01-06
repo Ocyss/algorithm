@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/EndlessCheng/codeforces-go/main/testutil"
 	"testing"
+
+	"github.com/EndlessCheng/codeforces-go/main/testutil"
 )
 
 // TestCF1118D2 https://codeforces.com/problemset/problem/1118/D2

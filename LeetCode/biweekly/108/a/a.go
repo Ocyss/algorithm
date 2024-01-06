@@ -11,7 +11,6 @@ func alternatingSubarray(nums []int) int {
 			ans = max(ans, r-l)
 			if nums[r] == pre+1 {
 				r--
-
 			}
 			l = r
 			flag = 1

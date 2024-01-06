@@ -2,7 +2,7 @@
 package main
 
 import (
-	"leetcode/testutil"
+	"github.com/Ocyss/OI/generator/leetcode/testutil"
 	"testing"
 )
 
